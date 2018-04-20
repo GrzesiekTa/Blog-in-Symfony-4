@@ -1,38 +1,29 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello blog{% endblock %}
-
+{% block title %}Grzegorz Tarka - Blog o tworzeniu stron - HTML5,Css,Javascript,Php.{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-
     <div class="container">
+        <h3>Witaj na blogu poświeconym programowaniu i nowoczesnym technologiom.</h3>
         <div class="row">
-            <div class="col-8">
-
+            <div class="col-md-8">
                 {% for Post in pagination %}
                     <div {% if loop.index is odd %}class="color"{% endif %}>
-
-                        <h3><a href="{{  Post.id }}">{{ Post.title }}</a></h3>
+                        <div class="row">
+                            <div class="col-md-6">{{ Post.date|date('Y-m-d') }}</div>
+                            <div class="col-md-6">Autor: Grzegorz Tarka</div>
+                        </div>
+                        <h3><a href="{{ Post.id }}">{{ Post.title }}</a></h3>
                         <p>{{ Post.shortcontent }}</p>
-
+                        <img src="http://grzesiek-tarka.ct8.pl/img/upload/5/titleimg/1000_book-1853677_1920.jpg" class="img-fluid rounded" alt="">
                     </div>
+                    <hr class="my-4 bg-dark">
                 {% endfor %}
             </div>
 
             <div class="col-4">
-
+                <h4>tu beda kategorie</h4>
             </div>
-
         </div>
     </div>
-
-
-
-
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}

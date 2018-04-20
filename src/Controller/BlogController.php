@@ -16,7 +16,7 @@ class BlogController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository(Post::class);
         $query = $repository->createQueryBuilder('p')
-            ->select(['p.title','p.id','p.shortcontent'])
+            ->select(['p.title','p.id','p.shortcontent','p.date'])
             ->orderBy('p.id', 'ASC');
 
         $paginator  = $this->get('knp_paginator');
