@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Edycja kategori {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Edytj nazwe kategori</h1>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

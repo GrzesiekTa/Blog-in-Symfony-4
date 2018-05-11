@@ -12,39 +12,33 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Post[]    findAll()
  * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PostRepository extends ServiceEntityRepository
-{
-    public function __construct(RegistryInterface $registry)
-    {
-        parent::__construct($registry, Post::class);
-    }
+class PostRepository extends ServiceEntityRepository {
+	public function __construct(RegistryInterface $registry) {
+		parent::__construct($registry, Post::class);
+	}
 
-//    /**
-//     * @return Post[] Returns an array of Post objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+	public function findPosts() {
+		$posts = $this->getEntityManager()->createQueryBuilder('p');
+		$posts
+			->select('partial p.{id, title, slug,shortcontent,publishedAt}', 't')
+			->from('App:Post', 'p')
+			->leftJoin('p.tags', 't')
+			->orderBy('p.id', 'DESC');
 
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+		return $posts;
+	}
+
+	public function findPostsByTag($tag) {
+		$query = $this->getEntityManager()
+			->createQuery('
+                SELECT partial p.{id, title, slug,shortcontent,publishedAt}, t
+                FROM App:Post p
+                left JOIN p.tags t
+				where t.id=:tag
+                ORDER BY p.publishedAt DESC
+         ')->setParameter('tag', $tag);
+
+		return $query;
+	}
+
 }

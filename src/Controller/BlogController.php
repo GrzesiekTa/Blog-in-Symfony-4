@@ -3,28 +3,50 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Tag;
+use App\Repository\PostRepository;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
-class BlogController extends Controller
-{
-    /**
-     * @Route("/blog", name="blog")
-     */
-    public function index(Request $request)
-    {
-        $repository = $this->getDoctrine()->getRepository(Post::class);
-        $query = $repository->createQueryBuilder('p')
-            ->select(['p.title','p.id','p.shortcontent','p.date'])
-            ->orderBy('p.id', 'ASC');
+class BlogController extends Controller {
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1)/*page number*/,
-            2/*limit per page*/
-        );
-        return $this->render('blog/index.html.twig', array('pagination' => $pagination));
-    }
+	public function index(Request $request, PostRepository $posts, TagRepository $tags) {
+
+		$latestPosts = $posts->findPosts();
+
+		$paginator = $this->get('knp_paginator');
+		$pagination = $paginator->paginate(
+			$latestPosts, /* query NOT result */
+			$request->query->getInt('page', 1) /*page number*/,
+			2/*limit per page*/
+		);
+
+		$tags = $tags->findTags();
+
+		return $this->render('blog/index.html.twig', array('pagination' => $pagination, 'tags' => $tags));
+	}
+
+	//==========================================================================================================
+	public function showPost(Post $post) {
+
+		return $this->render('blog/show_post.html.twig', ['post' => $post]);
+	}
+
+	public function showByTag(Request $request, Tag $tag, PostRepository $posts, TagRepository $tags) {
+
+		$postsByTag = $posts->findPostsByTag($tag);
+
+		$paginator = $this->get('knp_paginator');
+		$pagination = $paginator->paginate(
+			$postsByTag, /* query NOT result */
+			$request->query->getInt('page', 1) /*page number*/,
+			2/*limit per page*/
+		);
+
+		$tags = $tags->findTags();
+		return $this->render('blog/index.html.twig', array('pagination' => $pagination, 'tags' => $tags));
+
+	}
+
 }

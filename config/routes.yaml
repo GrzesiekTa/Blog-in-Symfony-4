@@ -6,8 +6,50 @@ blog:
     path: /blog
     controller: App\Controller\BlogController::index
 
+post_show:
+    path:   /blog/post/{slug}
+    controller: App\Controller\BlogController::showPost
+
+
+
+post_by_tag:
+    path: /blog/slug/{slug}
+    controller: App\Controller\BlogController::showByTag
+
+
+
+
+
+
+
+
+
 
 add_post:
-    path: /add-post
-    controller: App\Controller\PostController::add
+    path: /admin/add-post
+    controller: App\Controller\Admin\BlogController::add
 
+post_edit:
+    path:   /admin/blog/edit/post/{id}
+    controller: App\Controller\Admin\BlogController::edit
+
+post_list:
+    path:   /admin/blog/post/list
+    controller: App\Controller\Admin\BlogController::list
+
+
+
+
+
+
+blog_category:
+    path:   /admin/blog/category
+    controller: App\Controller\Admin\TagController::list
+
+category_edit:
+    path:   /admin/blog/edit/category/{id}
+    controller: App\Controller\Admin\TagController::edit
+
+category_add:
+    path:   /admin/blog/add/category
+    controller: App\Controller\Admin\TagController::add

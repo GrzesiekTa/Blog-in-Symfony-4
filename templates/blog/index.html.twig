@@ -6,27 +6,65 @@
         <div class="row">
             <div class="col-md-8">
                 {% for Post in pagination %}
-                    <div {% if loop.index is odd %}class="color"{% endif %}>
-                        <div class="row">
-                            <div class="col-md-6">{{ Post.date|date('Y-m-d') }}</div>
-                            <div class="col-md-6">Autor: Grzegorz Tarka</div>
+                    <div class="bg-white">
+                        <div class="col-md-12">
+                            <div class=" vertical_align d-lg-flex align-items-lg-center">
+                                <div class="col-lg-4">
+                                    <h5 class="date-h text-lg-left text-center"><i class="fas fa-pencil-alt fa-1x radius-blog" aria-hidden="true"></i></h5>
+                                </div>
+                                <div class="col-lg-8 text-lg-right text-center">
+                                    {% for tags in Post.tags %}
+                                        <span class="blog-category">{{tags.name}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-md-6 text-md-left text-sm-center">
+                                    <h6><i class="far fa-clock text-danger" aria-hidden="true"></i>{{ Post.publishedAt|date("m/d/Y") }}</h6>
+                                </div>
+                                <div class="col-md-6 text-md-right text-sm-center"><h6><i class="fa fa-user text-danger"></i> Autor: Grzegorz Tarka</h6></div>
+                            </div>
+                            <h3><a href="{{ path('post_show', {'slug':Post.slug})}}">{{ Post.title }}</a></h3>
+                            <p>{{ Post.shortcontent }}</p>
                         </div>
-                        <h3><a href="{{ Post.id }}">{{ Post.title }}</a></h3>
-                        <p>{{ Post.shortcontent }}</p>
-                        <img src="http://grzesiek-tarka.ct8.pl/img/upload/5/titleimg/1000_book-1853677_1920.jpg" class="img-fluid rounded" alt="">
+                        <img src="http://grzesiek-tarka.ct8.pl/img/upload/5/titleimg/1000_book-1853677_1920.jpg"
+                        class="img-fluid rounded" alt="">
                     </div>
-                    <hr class="my-4 bg-dark">
+                    <br>
+                    <div class="clearfix"></div>
                 {% endfor %}
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
             </div>
-
-            <div class="col-4">
-                <h4>tu beda kategorie</h4>
+            <div class="col-md-4 bg-white">
+                <h3>Kategorie</h3>
+                {% for BlogTags in tags %}
+                    <a class="btn btn-outline-primary" href="{{ path('post_by_tag',{'slug':BlogTags.slug})}}">{{ BlogTags.name }}</a>
+                {% endfor %}
             </div>
         </div>
     </div>
-
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
-
+{% endblock %}
+{% block stylesheets %}
+    <style>
+    body {
+    background-color: #efefee;
+    }
+    .radius-blog{border-radius:50%;border:2px solid black;padding:20px;
+    display:block;
+    font-size:20px!important;
+    border: 2px solid #999;transition: transform 0.3s;-webkit-transition: transform 0.3s;position:relative
+    }
+    .radius-blog:hover{
+    -moz-transform: rotate(20deg);
+    -webkit-transform:  rotate(20deg);
+    -o-transform: rotate(20deg);
+    transform: rotate(20deg);
+    border: 2px solid red;
+    }
+    .blog-category{border:2px solid #999;display:inline-block;padding:5px 15px;margin:5px 2px;border-radius:20px;color:#666
+    }
+    .blog-category:hover{color:#06C;border:2px solid #06C}
+    </style>
 {% endblock %}

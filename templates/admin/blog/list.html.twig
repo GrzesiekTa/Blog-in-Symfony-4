@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %} Dodawanie nowego posta {% endblock %}
+    {% block body %}
+        <div class="container">
+
+            <h3 class="text-center">Lista postów</h3>
+
+            <table id="articles" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Tytuł</th>
+                    <th>Data publikacji</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for Post in pagination %}
+                    <tr>
+                        <td>{{ Post.title }}</td>
+                        <td>{{ Post.publishedAt|date('Y-m-d h-m-s') }}</td>
+                        <td>
+                            <a target="_blank"
+                               href="{{ path('post_show', {'slug':Post.slug }) }}"
+                               class="btn btn-dark">show</a>
+                            <a href="{{ path('post_edit',{'id': Post.id}) }}" class="btn btn-primary">edit</a>
+                            <a href="#" class="btn btn-danger delete-article" data-id="">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
