@@ -16,6 +16,9 @@
         "symfony/lts": "^4@dev",
         "symfony/maker-bundle": "^1.4",
         "symfony/orm-pack": "^1.0",
+        "symfony/security": "^4.0",
+        "symfony/security-bundle": "^4.0",
+        "symfony/security-csrf": "^4.0",
         "symfony/templating": "^4.0",
         "symfony/translation": "^4.0",
         "symfony/twig-bundle": "^4.0",
@@ -25,6 +28,7 @@
         "twig/extensions": "^1.5"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.0",
         "symfony/dotenv": "^4.0",
         "symfony/profiler-pack": "^1.0"
     },
