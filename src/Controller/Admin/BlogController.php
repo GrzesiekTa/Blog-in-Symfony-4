@@ -7,66 +7,87 @@ use App\Form\PostType;
 use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BlogController extends Controller {
 
-	public function add(Request $request) {
-		$post = new Post;
-		$slugify = new Slugify;
-		//===============================================================================
-		$form = $this->createForm(PostType::class, $post);
-		$form->handleRequest($request);
-		//===============================================================================
-		$validator = $this->get('validator');
-		$errors = $validator->validate($post);
-		//===============================================================================
-		if ($form->isSubmitted() && $form->isValid()) {
-			//$post->setPublishedAt($post->getPublishedAt());
-			$post->setSlug($slugify->slugify($post->getTitle()));
-			//===============================================================================
-			$entityManager = $this->getDoctrine()->getManager();
-			$entityManager->persist($post);
-			$entityManager->flush();
+    /**
+     * adding post
+     * 
+     * @param Request $request
+     * 
+     * @return Response
+     */
+    public function add(Request $request): Response {
+        $post = new Post;
+        $slugify = new Slugify;
 
-			return $this->redirectToRoute('blog');
-		}
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
 
-		return $this->render('admin/blog/add.html.twig', array('form' => $form->createView()));
-	}
+        $validator = $this->get('validator');
+        $errors = $validator->validate($post);
 
-	public function edit(Request $request, $id) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            //$post->setPublishedAt($post->getPublishedAt());
+            $post->setSlug($slugify->slugify($post->getTitle()));
 
-		$slugify = new Slugify;
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
 
-		$post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+            return $this->redirectToRoute('blog');
+        }
 
-		$form = $this->createForm(PostType::class, $post);
-		$form->handleRequest($request);
+        return $this->render('admin/blog/add.html.twig', array('form' => $form->createView()));
+    }
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$post->setSlug($slugify->slugify($post->getTitle()));
-			$entityManager = $this->getDoctrine()->getManager();
+    /**
+     * edit post
+     * 
+     * @param Request $request
+     * @param type $id
+     * 
+     * @return Response
+     */
+    public function edit(Request $request, $id): Response {
 
-			$entityManager->flush();
-		}
+        $slugify = new Slugify;
 
-		return $this->render('admin/blog/edit.html.twig', ['post' => $post, 'form' => $form->createView()]);
-	}
+        $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
 
-	public function list(Request $request) {
-		$repository = $this->getDoctrine()->getRepository(Post::class);
-		$query = $repository->createQueryBuilder('p')
-			->select(['p.title', 'p.slug', 'p.id', 'p.shortcontent', 'p.publishedAt'])
-			->orderBy('p.id', 'ASC');
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
 
-		$paginator = $this->get('knp_paginator');
-		$pagination = $paginator->paginate(
-			$query, /* query NOT result */
-			$request->query->getInt('page', 1) /*page number*/,
-			10/*limit per page*/
-		);
-		return $this->render('admin/blog/list.html.twig', array('pagination' => $pagination));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setSlug($slugify->slugify($post->getTitle()));
+            $entityManager = $this->getDoctrine()->getManager();
 
-	}
+            $entityManager->flush();
+        }
+
+        return $this->render('admin/blog/edit.html.twig', ['post' => $post, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @param Request $request
+     * 
+     * @return Response
+     */
+    public function list(Request $request): Response {
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $query = $repository->createQueryBuilder('p')
+                ->select(['p.title', 'p.slug', 'p.id', 'p.shortcontent', 'p.publishedAt'])
+                ->orderBy('p.id', 'ASC');
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                $query, /* query NOT result */
+                $request->query->getInt('page', 1) /* page number */,
+                10/* limit per page */
+        );
+        
+        return $this->render('admin/blog/list.html.twig', array('pagination' => $pagination));
+    }
 
 }

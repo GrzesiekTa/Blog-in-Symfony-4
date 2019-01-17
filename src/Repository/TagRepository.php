@@ -13,11 +13,15 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class TagRepository extends ServiceEntityRepository {
-	public function __construct(RegistryInterface $registry) {
-		parent::__construct($registry, Tag::class);
-	}
+    /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry) {
+        parent::__construct($registry, Tag::class);
+    }
 
-	public function findTags() {
-		return $this->getEntityManager()->getRepository(Tag::class)->findAll();
-	}
+    public function findTags() {
+        return $this->getEntityManager()->getRepository(Tag::class)->findAll();
+    }
+
 }

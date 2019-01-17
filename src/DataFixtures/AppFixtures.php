@@ -20,23 +20,20 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AppFixtures extends Fixture
-{
+class AppFixtures extends Fixture {
+
     private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder) {
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function load(ObjectManager $manager)
-    {
+    public function load(ObjectManager $manager) {
         $this->loadUsers($manager);
         $this->loadTags($manager);
     }
 
-    private function loadUsers(ObjectManager $manager)
-    {
+    private function loadUsers(ObjectManager $manager) {
         foreach ($this->getUserData() as [$fullname, $username, $password, $email, $roles]) {
             $user = new User();
             $user->setFullName($fullname);
@@ -52,33 +49,27 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    private function loadTags(ObjectManager $manager)
-    {
+    private function loadTags(ObjectManager $manager) {
         foreach ($this->getTagData() as $index => $name) {
             $tag = new Tag();
             $tag->setName($name);
             $tag->setSlug($name);
 
             $manager->persist($tag);
-            $this->addReference('tag-'.$name, $tag);
+            $this->addReference('tag-' . $name, $tag);
         }
 
         $manager->flush();
     }
 
-
-
-    private function getUserData(): array
-    {
+    private function getUserData(): array {
         return [
             ['Grzegorz Tarka', 'gregory', 'tajne', 'grzesiek@address.pl', ['ROLE_ADMIN']],
-         
-            //['John Doe', 'john_user', 'kitten', 'john_user@symfony.com', ['ROLE_USER']],
+                //['John Doe', 'john_user', 'kitten', 'john_user@symfony.com', ['ROLE_USER']],
         ];
     }
 
-    private function getTagData(): array
-    {
+    private function getTagData(): array {
         return [
             'html',
             'css',
@@ -95,9 +86,4 @@ class AppFixtures extends Fixture
         ];
     }
 
-   
-
-    
-
-   
 }
